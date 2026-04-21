@@ -5,6 +5,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import LoginPage from './features/auth/LoginPage';
 import RegisterPage from './features/auth/RegisterPage';
 import SubscriptionsPage from './features/subscriptions/SubscriptionsPage';
+import DashboardPage from './features/dashboard/DashboardPage';
 
 // Placeholder for pages built in later phases
 const PlaceholderPage = ({ title, icon }) => (
@@ -19,7 +20,7 @@ const PlaceholderPage = ({ title, icon }) => (
   </div>
 );
 
-const DashboardPage = () => <PlaceholderPage title="Dashboard" icon="📊" />;
+
 const AnalyticsPage = () => <PlaceholderPage title="Analytics" icon="📈" />;
 const SettingsPage = () => <PlaceholderPage title="Settings" icon="⚙️" />;
 

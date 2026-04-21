@@ -31,7 +31,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 app.use('/api/categories', require('./routes/categoryRoutes'));
-// app.use('/api/analytics', require('./routes/analyticsRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 // app.use('/api/notifications', require('./routes/notificationRoutes'));
 
 // 404 handler for unknown routes
