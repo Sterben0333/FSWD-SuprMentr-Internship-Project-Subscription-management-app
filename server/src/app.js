@@ -27,8 +27,8 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// API Routes (will be added in Phase 2+)
-// app.use('/api/auth', require('./routes/authRoutes'));
+// API Routes
+app.use('/api/auth', require('./routes/authRoutes'));
 // app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 // app.use('/api/categories', require('./routes/categoryRoutes'));
 // app.use('/api/analytics', require('./routes/analyticsRoutes'));
