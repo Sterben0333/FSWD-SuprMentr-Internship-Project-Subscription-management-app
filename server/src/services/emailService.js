@@ -103,7 +103,7 @@ const sendRenewalReminder = async (to, { appName, plan, renewalDate, cost }) => 
   try {
     const msg = {
       to,
-      from: env.EMAIL_FROM || '"SubTrackr" <noreply@subtrackr.com>',
+      from: env.EMAIL_FROM || '"SubTrackr" <substrackr@gmail.com>',
       subject: `🔔 ${appName} renewal in 3 days — ${formattedCost}`,
       html,
     };
