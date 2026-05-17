@@ -51,4 +51,16 @@ const updateProfile = async (req, res, next) => {
   }
 };
 
-module.exports = { register, login, getMe, updateProfile };
+const deleteAccount = async (req, res, next) => {
+  try {
+    await authService.deleteAccount(req.userId);
+    res.json({
+      success: true,
+      message: 'Account deleted successfully',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+module.exports = { register, login, getMe, updateProfile, deleteAccount };

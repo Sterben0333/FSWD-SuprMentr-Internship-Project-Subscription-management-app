@@ -1,8 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
+import { usePDF } from 'react-to-pdf';
 import useSubscriptionStore from '../../store/subscriptionStore';
+import useAuthStore from '../../store/authStore';
 import { subscriptionAPI, categoryAPI } from './subscriptionAPI';
 import SubscriptionCard from './SubscriptionCard';
 import SubscriptionForm from './SubscriptionForm';
+import ConfirmModal from '../../components/ConfirmModal';
+import SubscriptionReport from './SubscriptionReport';
 import './SubscriptionsPage.css';
 
 const SubscriptionsPage = () => {
@@ -19,9 +23,32 @@ const SubscriptionsPage = () => {
     setLoading,
   } = useSubscriptionStore();
 
+  const currency = useAuthStore((s) => s.user?.currency) || 'INR';
+
   const [showForm, setShowForm] = useState(false);
   const [editingSub, setEditingSub] = useState(null);
   const [categories, setCategories] = useState([]);
+  const [deleteTarget, setDeleteTarget] = useState(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  // PDF export
+  const { toPDF, targetRef } = usePDF({
+    filename: `SubTrackr_Report_${new Date().toISOString().slice(0, 10)}.pdf`,
+    page: { margin: 0 },
+  });
+  const [pdfLoading, setPdfLoading] = useState(false);
+
+  const handleExportPDF = async () => {
+    if (subscriptions.length === 0) return;
+    setPdfLoading(true);
+    try {
+      await toPDF();
+    } catch (err) {
+      console.error('PDF export failed:', err);
+    } finally {
+      setPdfLoading(false);
+    }
+  };
 
   const fetchSubscriptions = useCallback(async () => {
     setLoading(true);
@@ -63,13 +90,22 @@ const SubscriptionsPage = () => {
     setShowForm(false);
   };
 
-  const handleDelete = async (id) => {
-    if (!confirm('Delete this subscription?')) return;
+  const handleDelete = (id) => {
+    const sub = subscriptions.find((s) => s._id === id);
+    setDeleteTarget(sub || { _id: id, name: 'this subscription' });
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteTarget) return;
+    setIsDeleting(true);
     try {
-      await subscriptionAPI.delete(id);
-      removeSubscription(id);
+      await subscriptionAPI.delete(deleteTarget._id);
+      removeSubscription(deleteTarget._id);
     } catch (err) {
       console.error('Failed to delete:', err);
+    } finally {
+      setIsDeleting(false);
+      setDeleteTarget(null);
     }
   };
 
@@ -96,6 +132,13 @@ const SubscriptionsPage = () => {
 
   return (
     <div className="subs-page animate-fade-in-up">
+      {/* Hidden PDF report target */}
+      <SubscriptionReport
+        subscriptions={subscriptions}
+        currency={currency}
+        innerRef={targetRef}
+      />
+
       <div className="subs-header">
         <div>
           <h1 className="text-2xl font-bold">Subscriptions</h1>
@@ -103,9 +146,33 @@ const SubscriptionsPage = () => {
             {activeCount} active · est. {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 }).format(totalMonthly)}/mo
           </p>
         </div>
-        <button className="btn btn-primary" onClick={() => setShowForm(true)}>
-          + Add Subscription
-        </button>
+        <div className="subs-header-actions">
+          <button
+            className="btn btn-outline-primary"
+            onClick={handleExportPDF}
+            disabled={pdfLoading || subscriptions.length === 0}
+            title={subscriptions.length === 0 ? 'Add subscriptions to export' : 'Download PDF report'}
+          >
+            {pdfLoading ? (
+              <>
+                <span className="btn-spinner"></span>
+                Generating…
+              </>
+            ) : (
+              <>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{width:14,height:14}}>
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                  <polyline points="7 10 12 15 17 10"/>
+                  <line x1="12" y1="15" x2="12" y2="3"/>
+                </svg>
+                Export PDF
+              </>
+            )}
+          </button>
+          <button className="btn btn-primary" onClick={() => setShowForm(true)}>
+            + Add Subscription
+          </button>
+        </div>
       </div>
 
       {/* Filters */}
@@ -183,6 +250,20 @@ const SubscriptionsPage = () => {
           subscription={editingSub}
           onSubmit={editingSub ? handleUpdate : handleCreate}
           onClose={handleCloseForm}
+        />
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {deleteTarget && (
+        <ConfirmModal
+          title="Delete Subscription"
+          message={`Are you sure you want to delete "${deleteTarget.name}"? This action cannot be undone.`}
+          confirmLabel="Delete"
+          cancelLabel="Cancel"
+          variant="danger"
+          loading={isDeleting}
+          onConfirm={confirmDelete}
+          onCancel={() => setDeleteTarget(null)}
         />
       )}
     </div>

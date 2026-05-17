@@ -1,0 +1,40 @@
+/*  HERE IS ANALYTICS PAGE */
+
+.analytics-header { margin-bottom: var(--space-lg); }
+
+/* This is Summary stats row */
+.analytics-summary { display: flex; gap: var(--space-sm); margin-bottom: var(--space-xl); flex-wrap: wrap; }
+.analytics-stat-pill {
+  display: flex; align-items: center; gap: var(--space-sm);
+  padding: 8px 16px; border-radius: var(--radius-full);
+  background: var(--bg-glass); border: var(--glass-border);
+  font-size: var(--font-size-sm);
+}
+.analytics-stat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.analytics-stat-label { color: var(--text-muted); }
+.analytics-stat-value { font-weight: var(--font-weight-semibold); }
+
+.analytics-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); }
+
+.chart-card { padding: var(--space-lg); }
+.chart-card:hover { transform: none; }
+.chart-wide { grid-column: 1 / -1; }
+
+.chart-title {
+  font-size: var(--font-size-md); font-weight: var(--font-weight-semibold);
+  margin-bottom: var(--space-md); display: flex; align-items: center;
+}
+
+.chart-tooltip {
+  background: var(--bg-elevated); border: 1px solid var(--border);
+  border-radius: var(--radius-md); padding: var(--space-sm) var(--space-md);
+  font-size: var(--font-size-sm); box-shadow: var(--shadow-lg);
+}
+
+.recharts-legend-item-text { color: var(--text-secondary) !important; font-size: var(--font-size-xs) !important; }
+.recharts-default-tooltip { background: var(--bg-elevated) !important; border: 1px solid var(--border) !important; border-radius: var(--radius-md) !important; }
+
+@media (max-width: 768px) {
+  .analytics-grid { grid-template-columns: 1fr; }
+  .chart-wide { grid-column: 1; }
+}

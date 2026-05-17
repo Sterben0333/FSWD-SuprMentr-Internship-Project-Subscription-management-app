@@ -1,20 +1,9 @@
-.sub-form-modal {
-  max-width: 600px;
-}
+.sub-form-modal { max-width: 600px; }
+.sub-form { display: flex; flex-direction: column; }
+.form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-md); }
 
-.sub-form {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: var(--space-md);
-}
+.modal-header { background: var(--gradient-subtle); }
 
 @media (max-width: 600px) {
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
+  .form-grid { grid-template-columns: 1fr; }
 }

@@ -73,17 +73,54 @@ const getMe = async (userId) => {
 };
 
 /**
- * Update user profile
+ * Update user profile (including optional password change)
  */
 const updateProfile = async (userId, updates) => {
-  const user = await User.findByIdAndUpdate(userId, updates, {
-    new: true,
-    runValidators: true,
-  });
+  const user = await User.findById(userId);
   if (!user) {
     throw ApiError.notFound('User not found');
   }
+
+  // Handle password change
+  if (updates.currentPassword && updates.newPassword) {
+    const isMatch = await bcrypt.compare(updates.currentPassword, user.passwordHash);
+    if (!isMatch) {
+      throw ApiError.badRequest('Current password is incorrect');
+    }
+    user.passwordHash = await bcrypt.hash(updates.newPassword, SALT_ROUNDS);
+  }
+
+  // Apply allowed field updates
+  const allowedFields = ['name', 'theme', 'currency', 'budgetLimit'];
+  for (const field of allowedFields) {
+    if (updates[field] !== undefined) {
+      user[field] = updates[field];
+    }
+  }
+
+  await user.save();
   return sanitizeUser(user);
+};
+
+/**
+ * Delete user account and all associated data
+ */
+const deleteAccount = async (userId) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    throw ApiError.notFound('User not found');
+  }
+
+  // Import models here to avoid circular dependencies
+  const Subscription = require('../models/Subscription');
+  const Notification = require('../models/Notification');
+
+  // Delete all user data
+  await Subscription.deleteMany({ userId });
+  await Notification.deleteMany({ userId });
+  await User.findByIdAndDelete(userId);
+
+  return { message: 'Account deleted successfully' };
 };
 
 // ——— Helpers ———
@@ -103,4 +140,4 @@ function sanitizeUser(user) {
   return obj;
 }
 
-module.exports = { register, login, getMe, updateProfile };
+module.exports = { register, login, getMe, updateProfile, deleteAccount };

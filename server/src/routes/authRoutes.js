@@ -12,5 +12,6 @@ router.post('/login', validate(loginSchema), authController.login);
 // Protected routes
 router.get('/me', authMiddleware, authController.getMe);
 router.put('/profile', authMiddleware, validate(updateProfileSchema), authController.updateProfile);
+router.delete('/account', authMiddleware, authController.deleteAccount);
 
 module.exports = router;

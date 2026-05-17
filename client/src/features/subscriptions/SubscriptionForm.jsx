@@ -94,7 +94,7 @@ const SubscriptionForm = ({ subscription, onSubmit, onClose }) => {
           <button className="btn-ghost btn-icon" onClick={onClose}>✕</button>
         </div>
 
-        <form className="modal-body sub-form" onSubmit={handleSubmit}>
+        <form id="sub-form" className="modal-body sub-form" onSubmit={handleSubmit}>
           {error && <div className="auth-error">{error}</div>}
 
           <div className="form-grid">
@@ -237,23 +237,23 @@ const SubscriptionForm = ({ subscription, onSubmit, onClose }) => {
               maxLength={500}
             />
           </div>
-
-          <div className="modal-footer" style={{ padding: 0, marginTop: 'var(--space-lg)', border: 'none' }}>
-            <button type="button" className="btn btn-secondary" onClick={onClose}>
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary" disabled={loading}>
-              {loading ? (
-                <>
-                  <span className="spinner spinner-sm"></span>
-                  {isEdit ? 'Saving...' : 'Creating...'}
-                </>
-              ) : (
-                isEdit ? 'Save Changes' : 'Create Subscription'
-              )}
-            </button>
-          </div>
         </form>
+
+        <div className="modal-footer">
+          <button type="button" className="btn btn-secondary" onClick={onClose}>
+            Cancel
+          </button>
+          <button type="submit" form="sub-form" className="btn btn-primary" disabled={loading}>
+            {loading ? (
+              <>
+                <span className="spinner spinner-sm"></span>
+                {isEdit ? 'Saving...' : 'Creating...'}
+              </>
+            ) : (
+              isEdit ? 'Save Changes' : 'Create Subscription'
+            )}
+          </button>
+        </div>
       </div>
     </div>
   );

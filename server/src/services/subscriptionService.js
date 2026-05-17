@@ -1,6 +1,47 @@
 const Subscription = require('../models/Subscription');
+const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
-const { addMonths, addYears, addDays } = require('date-fns');
+const emailService = require('./emailService');
+const notificationService = require('./notificationService');
+const { addMonths, addYears, addDays, differenceInDays } = require('date-fns');
+
+/**
+ * Send immediate renewal reminder if nextPaymentDate is within 3 days
+ */
+const sendImmediateReminderIfDue = async (subscription, userId) => {
+  try {
+    const now = new Date();
+    const nextPayment = new Date(subscription.nextPaymentDate);
+    const daysUntil = differenceInDays(nextPayment, now);
+
+    if (daysUntil >= 0 && daysUntil <= 3) {
+      // Create in-app notification
+      await notificationService.createNotification({
+        userId,
+        subscriptionId: subscription._id,
+        title: `Payment due${daysUntil === 0 ? ' today' : ` in ${daysUntil} day${daysUntil > 1 ? 's' : ''}`}`,
+        message: `${subscription.name} payment of ₹${subscription.cost} is ${daysUntil === 0 ? 'due today' : `coming up in ${daysUntil} day${daysUntil > 1 ? 's' : ''}`}.`,
+        type: 'upcoming',
+        triggerDate: nextPayment,
+      });
+
+      // Send email reminder
+      const user = await User.findById(userId).select('email').lean();
+      if (user?.email) {
+        await emailService.sendRenewalReminder(user.email, {
+          appName: subscription.name,
+          plan: subscription.billingCycle,
+          renewalDate: subscription.nextPaymentDate,
+          cost: subscription.cost,
+        });
+        console.log(`📧 Immediate reminder sent to ${user.email} for ${subscription.name}`);
+      }
+    }
+  } catch (err) {
+    // Don't fail subscription creation if email fails
+    console.error('📧 Immediate reminder failed:', err.message);
+  }
+};
 
 /**
  * List subscriptions for a user with optional filters
@@ -56,6 +97,9 @@ const createSubscription = async (userId, data) => {
     lastInteractedAt: new Date(),
   });
 
+  // Send immediate email reminder if renewal is within 3 days
+  await sendImmediateReminderIfDue(subscription, userId);
+
   return subscription.populate('categoryId', 'name color icon');
 };
 
@@ -74,11 +118,20 @@ const updateSubscription = async (id, userId, data) => {
     data.nextPaymentDate = calculateNextDate(baseDate, data.billingCycle, data.customCycleDays);
   }
 
+  // Check if nextPaymentDate is being changed
+  const paymentDateChanged = data.nextPaymentDate &&
+    new Date(data.nextPaymentDate).getTime() !== new Date(subscription.nextPaymentDate).getTime();
+
   // Update lastInteractedAt
   data.lastInteractedAt = new Date();
 
   Object.assign(subscription, data);
   await subscription.save();
+
+  // Send immediate email reminder if nextPaymentDate was changed to within 3 days
+  if (paymentDateChanged) {
+    await sendImmediateReminderIfDue(subscription, userId);
+  }
 
   return subscription.populate('categoryId', 'name color icon');
 };

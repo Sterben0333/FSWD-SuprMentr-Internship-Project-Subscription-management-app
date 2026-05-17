@@ -7,15 +7,10 @@ require('dotenv').config({ path: path.resolve(__dirname, '../../../.env') });
 const Category = require('../models/Category');
 
 const presetCategories = [
-  { name: 'Entertainment', color: '#E74C3C', icon: '🎬' },
-  { name: 'Tools & Software', color: '#3498DB', icon: '🛠️' },
-  { name: 'Cloud & Hosting', color: '#9B59B6', icon: '☁️' },
-  { name: 'Music', color: '#1DB954', icon: '🎵' },
   { name: 'Gaming', color: '#F39C12', icon: '🎮' },
-  { name: 'Education', color: '#2ECC71', icon: '📚' },
-  { name: 'Health & Fitness', color: '#E91E63', icon: '💪' },
-  { name: 'Utilities', color: '#607D8B', icon: '⚡' },
-  { name: 'News & Media', color: '#FF5722', icon: '📰' },
+  { name: 'Entertainment', color: '#E74C3C', icon: '🎬' },
+  { name: 'Shopping', color: '#00A8E1', icon: '🛒' },
+  { name: 'Music', color: '#1DB954', icon: '🎵' },
   { name: 'Other', color: '#95A5A6', icon: '📦' },
 ];
 

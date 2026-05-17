@@ -1,0 +1,227 @@
+/* ======================================
+   DEFAULT APP CARD — Quick Subscribe
+   ====================================== */
+
+.default-app-card {
+  position: relative;
+  background: var(--bg-glass);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-md);
+  /* Removed fixed width — grid handles sizing */
+  min-width: 0;
+  width: 100%;
+  transition: transform var(--transition-base) var(--ease-out-expo),
+              box-shadow var(--transition-base) var(--ease-out-expo),
+              border-color var(--transition-base);
+  overflow: hidden;
+}
+.default-app-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--app-color);
+  border-radius: 3px 3px 0 0;
+  opacity: 0.7;
+  transition: opacity var(--transition-fast);
+}
+.default-app-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg), 0 0 20px color-mix(in srgb, var(--app-color) 15%, transparent);
+  border-color: color-mix(in srgb, var(--app-color) 25%, transparent);
+}
+.default-app-card:hover::before {
+  opacity: 1;
+}
+.default-app-card.subscribed {
+  opacity: 0.85;
+}
+.default-app-card.subscribed::before {
+  background: var(--success);
+}
+
+/* Logo */
+.default-app-logo {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.default-app-logo svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Name */
+.default-app-name {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-semibold);
+  text-align: center;
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Subscribed badge */
+.default-app-subscribed {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: var(--radius-full);
+  background: var(--success-light);
+  color: var(--success);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.3px;
+  margin-top: auto;
+}
+
+/* Plan buttons */
+.default-app-plans {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+  margin-top: auto;
+  overflow: hidden;
+}
+.default-app-plan-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1.5px solid var(--border);
+  color: var(--text-primary);
+  font-size: var(--font-size-xs);
+  cursor: pointer;
+  transition: all 200ms ease;
+  gap: 8px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  min-width: 0;
+}
+.default-app-plan-btn:hover {
+  border-color: var(--app-color);
+  background: color-mix(in srgb, var(--app-color) 8%, var(--bg-surface));
+  transform: scale(1.02);
+}
+.default-app-plan-btn:active {
+  transform: scale(0.98);
+}
+.default-app-plan-btn.selected {
+  border-color: var(--app-color);
+  background: color-mix(in srgb, var(--app-color) 12%, var(--bg-surface));
+  box-shadow: 0 0 0 1px var(--app-color);
+}
+.default-app-plan-btn.selected::after {
+  content: '✓';
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--app-color);
+  background: color-mix(in srgb, var(--app-color) 15%, transparent);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: scaleIn 200ms ease;
+}
+@keyframes scaleIn {
+  from { transform: translateY(-50%) scale(0); }
+  to   { transform: translateY(-50%) scale(1); }
+}
+.default-app-plan-btn .plan-name {
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+  flex: 1;
+}
+.default-app-plan-btn .plan-price {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.default-app-plan-btn .plan-cycle {
+  font-weight: var(--font-weight-normal);
+  color: var(--text-muted);
+  font-size: var(--font-size-2xs);
+}
+
+/* Confirmation overlay */
+.default-app-confirm-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-xl);
+  z-index: 2;
+  animation: fadeIn 200ms ease;
+  padding: var(--space-md);
+}
+.default-app-confirm {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+.default-app-confirm .confirm-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: #fff;
+}
+.default-app-confirm .confirm-detail {
+  font-size: var(--font-size-xs);
+  color: rgba(255, 255, 255, 0.7);
+}
+.default-app-confirm .confirm-actions {
+  display: flex;
+  gap: var(--space-sm);
+  justify-content: center;
+  margin-top: var(--space-xs);
+}
+
+/* Error toast inside card */
+.default-app-error {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  right: 8px;
+  padding: 6px 10px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  text-align: center;
+  z-index: 3;
+  animation: slideUpFade 300ms ease;
+}
+@keyframes slideUpFade {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
