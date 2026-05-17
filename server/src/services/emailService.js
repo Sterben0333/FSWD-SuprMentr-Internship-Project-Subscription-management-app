@@ -1,6 +1,7 @@
 const nodemailer = require('nodemailer');
 const env = require('../config/env');
-
+const dns = require('dns');
+dns.setDefaultResultOrder('ipv4first');
 /**
  * Email transporter — configured via env variables.
  * If EMAIL_HOST is not set, email sending is silently skipped.
