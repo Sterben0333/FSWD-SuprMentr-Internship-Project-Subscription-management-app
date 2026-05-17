@@ -10,11 +10,8 @@ const env = {
   PORT: parseInt(process.env.PORT, 10) || 5000,
   NODE_ENV: process.env.NODE_ENV || 'development',
 
-  // Email config (optional — email reminders disabled if not set)
-  EMAIL_HOST: process.env.EMAIL_HOST || null,
-  EMAIL_PORT: parseInt(process.env.EMAIL_PORT, 10) || 587,
-  EMAIL_USER: process.env.EMAIL_USER || null,
-  EMAIL_PASS: process.env.EMAIL_PASS || null,
+  // SendGrid email config (optional — email reminders disabled if not set)
+  SENDGRID_API_KEY: process.env.SENDGRID_API_KEY || null,
   EMAIL_FROM: process.env.EMAIL_FROM || null,
 };
 

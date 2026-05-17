@@ -1,35 +1,16 @@
-const nodemailer = require('nodemailer');
+const sgMail = require('@sendgrid/mail');
 const env = require('../config/env');
-const dns = require('dns');
-dns.setDefaultResultOrder('ipv4first');
+
 /**
- * Email transporter — configured via env variables.
- * If EMAIL_HOST is not set, email sending is silently skipped.
+ * SendGrid email service — configured via SENDGRID_API_KEY env variable.
+ * If the key is not set, email sending is silently skipped.
  */
-let transporter = null;
-
-const initTransporter = () => {
-  if (!env.EMAIL_HOST) {
-    console.log('📧 Email service not configured (EMAIL_HOST missing). Email reminders disabled.');
-    return null;
-  }
-
-  transporter = nodemailer.createTransport({
-    host: env.EMAIL_HOST,
-    port: env.EMAIL_PORT || 587,
-    secure: false, // use STARTTLS on port 587 (required for Gmail)
-    auth: {
-      user: env.EMAIL_USER,
-      pass: env.EMAIL_PASS,
-    },
-  });
-
-  console.log(`📧 Email service configured (${env.EMAIL_HOST}:${env.EMAIL_PORT || 587})`);
-  return transporter;
-};
-
-// Initialize on module load
-initTransporter();
+if (env.SENDGRID_API_KEY) {
+  sgMail.setApiKey(env.SENDGRID_API_KEY);
+  console.log('📧 Email service configured (SendGrid)');
+} else {
+  console.log('📧 Email service not configured (SENDGRID_API_KEY missing). Email reminders disabled.');
+}
 
 /**
  * Send a renewal reminder email
@@ -37,7 +18,7 @@ initTransporter();
  * @param {object} details - { appName, plan, renewalDate, cost }
  */
 const sendRenewalReminder = async (to, { appName, plan, renewalDate, cost }) => {
-  if (!transporter) {
+  if (!env.SENDGRID_API_KEY) {
     console.log(`📧 [SKIP] Renewal reminder for ${appName} — email not configured`);
     return null;
   }
@@ -120,14 +101,15 @@ const sendRenewalReminder = async (to, { appName, plan, renewalDate, cost }) => 
   `;
 
   try {
-    const info = await transporter.sendMail({
-      from: env.EMAIL_FROM || `"SubTrackr" <${env.EMAIL_USER}>`,
+    const msg = {
       to,
+      from: env.EMAIL_FROM || '"SubTrackr" <noreply@subtrackr.com>',
       subject: `🔔 ${appName} renewal in 3 days — ${formattedCost}`,
       html,
-    });
-    console.log(`📧 Renewal reminder sent to ${to} for ${appName} (${info.messageId})`);
-    return info;
+    };
+    const [response] = await sgMail.send(msg);
+    console.log(`📧 Renewal reminder sent to ${to} for ${appName} (status ${response.statusCode})`);
+    return response;
   } catch (error) {
     console.error(`📧 Failed to send reminder to ${to}:`, error.message);
     return null;
