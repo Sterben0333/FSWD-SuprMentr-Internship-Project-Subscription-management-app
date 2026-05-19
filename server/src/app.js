@@ -35,6 +35,7 @@ app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
+app.use('/api/cron', require('./routes/cronRoutes'));
 
 // 404 handler for unknown API routes
 app.all('/api/*', (req, res) => {

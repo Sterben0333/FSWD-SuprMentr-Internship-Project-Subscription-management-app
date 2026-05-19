@@ -1,14 +1,10 @@
 const app = require('./app');
 const connectDB = require('./config/db');
 const env = require('./config/env');
-const { initCronJobs } = require('./jobs/lifecycleJobs');
 
 const startServer = async () => {
   // Connect to MongoDB Atlas
   await connectDB();
-
-  // Initialize cron jobs
-  initCronJobs();
 
   // Start Express server
   app.listen(env.PORT, () => {

@@ -1,4 +1,3 @@
-const cron = require('node-cron');
 const { addDays, isBefore, isAfter, differenceInDays } = require('date-fns');
 const Subscription = require('../models/Subscription');
 const User = require('../models/User');
@@ -6,25 +5,21 @@ const notificationService = require('../services/notificationService');
 const emailService = require('../services/emailService');
 
 /**
- * Run all scheduled jobs
- * Called once on server start
+ * Run all daily lifecycle & notification jobs.
+ * Designed to be called by an external cron service via HTTP endpoint.
  */
-const initCronJobs = () => {
-  // Run daily at 8:00 AM
-  cron.schedule('0 8 * * *', async () => {
-    console.log('⏰ Running daily lifecycle & notification jobs...');
-    try {
-      await runUpcomingPaymentAlerts();
-      await runTrialEndingAlerts();
-      await runUnusedSubscriptionAlerts();
-      await runLifecycleTransitions();
-      console.log('✅ Daily jobs completed');
-    } catch (error) {
-      console.error('❌ Cron job error:', error.message);
-    }
-  });
-
-  console.log('🕐 Cron jobs scheduled (daily at 8:00 AM)');
+const runAllDailyJobs = async () => {
+  console.log('⏰ Running daily lifecycle & notification jobs...');
+  try {
+    await runUpcomingPaymentAlerts();
+    await runTrialEndingAlerts();
+    await runUnusedSubscriptionAlerts();
+    await runLifecycleTransitions();
+    console.log('✅ Daily jobs completed');
+  } catch (error) {
+    console.error('❌ Daily jobs error:', error.message);
+    throw error; // Re-throw so the HTTP route can return a 500
+  }
 };
 
 /**
@@ -142,4 +137,4 @@ const runLifecycleTransitions = async () => {
   }
 };
 
-module.exports = { initCronJobs };
+module.exports = { runAllDailyJobs };
