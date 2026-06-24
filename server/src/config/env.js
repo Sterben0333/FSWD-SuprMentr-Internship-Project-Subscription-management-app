@@ -13,6 +13,9 @@ const env = {
   // SendGrid email config (optional — email reminders disabled if not set)
   SENDGRID_API_KEY: process.env.SENDGRID_API_KEY || null,
   EMAIL_FROM: process.env.EMAIL_FROM || null,
+
+  // Admin email (auto-promoted to admin role on login)
+  ADMIN_EMAIL: process.env.ADMIN_EMAIL || 'vyomdhip1132003@gmail.com',
 };
 
 // Validate required variables

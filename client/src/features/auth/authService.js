@@ -7,3 +7,7 @@ export const authAPI = {
   updateProfile: (data) => api.put('/auth/profile', data),
   deleteAccount: () => api.delete('/auth/account'),
 };
+
+export const adminAPI = {
+  getStats: () => api.get('/admin/stats'),
+};

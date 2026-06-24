@@ -8,6 +8,8 @@ import DashboardPage from './features/dashboard/DashboardPage';
 import SubscriptionsPage from './features/subscriptions/SubscriptionsPage';
 import AnalyticsPage from './features/analytics/AnalyticsPage';
 import SettingsPage from './features/settings/SettingsPage';
+import AdminDashboard from './features/admin/AdminDashboard';
+import AdminRoute from './components/AdminRoute';
 
 const router = createBrowserRouter([
   {
@@ -30,6 +32,7 @@ const router = createBrowserRouter([
       { path: '/subscriptions', element: <SubscriptionsPage /> },
       { path: '/analytics', element: <AnalyticsPage /> },
       { path: '/settings', element: <SettingsPage /> },
+      { path: '/admin', element: <AdminRoute><AdminDashboard /></AdminRoute> },
     ],
   },
   {

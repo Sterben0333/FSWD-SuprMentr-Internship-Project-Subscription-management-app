@@ -1,10 +1,9 @@
 const sgMail = require('@sendgrid/mail');
 const env = require('../config/env');
 
-/**
+/*
  * SendGrid email service — configured via SENDGRID_API_KEY env variable.
- * If the key is not set, email sending is silently skipped.
- */
+  If the key is not set, email sending is silently skipped. */
 if (env.SENDGRID_API_KEY) {
   sgMail.setApiKey(env.SENDGRID_API_KEY);
   console.log('📧 Email service configured (SendGrid)');
@@ -14,8 +13,8 @@ if (env.SENDGRID_API_KEY) {
 
 /**
  * Send a renewal reminder email
- * @param {string} to - Recipient email address
- * @param {object} details - { appName, plan, renewalDate, cost }
+  @param {string} to - Recipient email address
+  @param {object} details - { appName, plan, renewalDate, cost }
  */
 const sendRenewalReminder = async (to, { appName, plan, renewalDate, cost }) => {
   if (!env.SENDGRID_API_KEY) {

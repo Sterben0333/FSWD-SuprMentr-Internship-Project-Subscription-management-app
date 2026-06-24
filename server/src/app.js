@@ -36,8 +36,9 @@ app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/cron', require('./routes/cronRoutes'));
+app.use('/api/admin', require('./routes/adminRoutes'));
 
-// 404 handler for unknown API routes
+// the 404 handler for unknown API routes
 app.all('/api/*', (req, res) => {
   res.status(404).json({
     success: false,
@@ -45,18 +46,18 @@ app.all('/api/*', (req, res) => {
   });
 });
 
-// --- Production: serve React client ---
+// Production
 if (process.env.NODE_ENV === 'production') {
   const clientBuildPath = path.join(__dirname, '../../client/dist');
   app.use(express.static(clientBuildPath));
 
-  // Catch-all: send index.html for React Router
+  
   app.get('*', (req, res) => {
     res.sendFile(path.join(clientBuildPath, 'index.html'));
   });
 }
 
-// Centralized error handler (must be last)
+
 app.use(errorHandler);
 
 module.exports = app;

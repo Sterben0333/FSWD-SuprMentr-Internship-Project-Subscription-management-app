@@ -6,9 +6,9 @@ import discordLogo from './discord_image.png';
 /*
   Default Subscription Apps — Displayed on dashboard after login
   billingCycle values map to existing Subscription model:
-    'monthly'  - monthly cycle
-    'yearly'   - yearly cycle
-    'custom'   - custom cycle with customCycleDays
+    monthly  - monthly cycle
+    yearly   - yearly cycle
+    custom   - custom cycle with customCycleDays
  */
 
 export const DEFAULT_APPS = [
@@ -69,7 +69,7 @@ export const DEFAULT_APPS = [
   },
 ];
 
-/* For Getting billing cycle label for display */
+/*For Getting billing cycle label for display */
 export const getCycleLabel = (billingCycle, customCycleDays) => {
   if (billingCycle === 'monthly') return '/mo';
   if (billingCycle === 'yearly') return '/yr';

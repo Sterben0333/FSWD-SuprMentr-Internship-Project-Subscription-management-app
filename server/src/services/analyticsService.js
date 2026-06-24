@@ -1,8 +1,6 @@
 const Subscription = require('../models/Subscription');
 
-/**
- * Get analytics data for charts
- */
+/* This is for Get analytics data for charts */
 const getAnalytics = async (userId) => {
   const subscriptions = await Subscription.find({ userId })
     .populate('categoryId', 'name color icon')
@@ -11,10 +9,10 @@ const getAnalytics = async (userId) => {
   const activeStatuses = ['active', 'trial'];
   const active = subscriptions.filter((s) => activeStatuses.includes(s.status));
 
-  // Monthly trend (last 12 months simulation based on current subscriptions)
+  // for the Monthly trend (last 12 months simulation based on current subscriptions)
   const monthlyTrend = generateMonthlyTrend(active);
 
-  // Category distribution (pie chart)
+  // this is for Category distribution (pie chart)
   const categoryDistribution = {};
   active.forEach((s) => {
     const cat = s.categoryId?.name || 'Other';
@@ -25,13 +23,13 @@ const getAnalytics = async (userId) => {
     categoryDistribution[cat].value += normalizeToMonthly(s);
   });
 
-  // Billing cycle distribution
+  // This is Billing cycle distribution
   const cycleDistribution = { monthly: 0, yearly: 0, custom: 0 };
   active.forEach((s) => {
     cycleDistribution[s.billingCycle] = (cycleDistribution[s.billingCycle] || 0) + 1;
   });
 
-  // Cost range distribution
+  // This is Cost range distribution
   const costRanges = [
     { range: '₹0–100', min: 0, max: 100, count: 0 },
     { range: '₹100–500', min: 100, max: 500, count: 0 },

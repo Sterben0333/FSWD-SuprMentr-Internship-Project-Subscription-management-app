@@ -29,6 +29,11 @@ const userSchema = new mongoose.Schema(
       enum: ['INR', 'USD'],
       default: 'INR',
     },
+    role: {
+      type: String,
+      enum: ['user', 'admin'],
+      default: 'user',
+    },
     budgetLimit: {
       type: Number,
       default: null,

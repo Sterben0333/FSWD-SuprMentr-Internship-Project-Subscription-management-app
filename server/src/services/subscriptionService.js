@@ -5,9 +5,7 @@ const emailService = require('./emailService');
 const notificationService = require('./notificationService');
 const { addMonths, addYears, addDays, differenceInDays } = require('date-fns');
 
-/**
- * Send immediate renewal reminder if nextPaymentDate is within 3 days
- */
+/*Send immediate renewal reminder if nextPaymentDate is within 3 days*/
 const sendImmediateReminderIfDue = async (subscription, userId) => {
   try {
     const now = new Date();
@@ -43,9 +41,7 @@ const sendImmediateReminderIfDue = async (subscription, userId) => {
   }
 };
 
-/**
- * List subscriptions for a user with optional filters
- */
+/*to List subscriptions for a user with optional filters*/
 const listSubscriptions = async (userId, filters = {}) => {
   const query = { userId };
 
@@ -67,9 +63,7 @@ const listSubscriptions = async (userId, filters = {}) => {
   return subscriptions;
 };
 
-/**
- * Get a single subscription
- */
+/*to Get a single subscription*/
 const getSubscription = async (id, userId) => {
   const subscription = await Subscription.findOne({ _id: id, userId })
     .populate('categoryId', 'name color icon');
@@ -79,9 +73,7 @@ const getSubscription = async (id, userId) => {
   return subscription;
 };
 
-/**
- * Create a new subscription
- */
+/* Create a new subscription*/
 const createSubscription = async (userId, data) => {
   // Auto-calculate nextPaymentDate if not provided
   const startDate = data.startDate ? new Date(data.startDate) : new Date();
@@ -103,9 +95,7 @@ const createSubscription = async (userId, data) => {
   return subscription.populate('categoryId', 'name color icon');
 };
 
-/**
- * Update a subscription
- */
+/*Update a subscription*/
 const updateSubscription = async (id, userId, data) => {
   const subscription = await Subscription.findOne({ _id: id, userId });
   if (!subscription) {
@@ -136,9 +126,7 @@ const updateSubscription = async (id, userId, data) => {
   return subscription.populate('categoryId', 'name color icon');
 };
 
-/**
- * Delete a subscription
- */
+/*Delete a subscription*/
 const deleteSubscription = async (id, userId) => {
   const subscription = await Subscription.findOneAndDelete({ _id: id, userId });
   if (!subscription) {

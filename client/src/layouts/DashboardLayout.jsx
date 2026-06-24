@@ -17,12 +17,13 @@ const pageTitle = {
   '/subscriptions': 'Subscriptions',
   '/analytics': 'Analytics',
   '/settings': 'Settings',
+  '/admin': 'Admin Panel',
 };
 
 const DashboardLayout = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, logout } = useAuthStore();
+  const { user, logout, isAdmin } = useAuthStore();
   const { theme, toggleTheme } = useThemeStore();
   const navigate = useNavigate();
   const location = useLocation();
@@ -63,6 +64,23 @@ const DashboardLayout = () => {
               {!sidebarCollapsed && <span className="nav-label">{item.label}</span>}
             </NavLink>
           ))}
+
+          {/* Admin-only nav item */}
+          {isAdmin && (
+            <NavLink
+              to="/admin"
+              className={({ isActive }) => `nav-item admin-nav-item ${isActive ? 'active' : ''}`}
+              title="Admin Panel"
+              onClick={() => setMobileOpen(false)}
+            >
+              <span className="nav-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                </svg>
+              </span>
+              {!sidebarCollapsed && <span className="nav-label">Admin Panel</span>}
+            </NavLink>
+          )}
         </nav>
 
         <div className="sidebar-footer">

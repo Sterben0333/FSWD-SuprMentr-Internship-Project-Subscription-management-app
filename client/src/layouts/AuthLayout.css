@@ -1,13 +1,10 @@
-/* ======================================
-   AUTH LAYOUT — Premium Login/Register
-   ====================================== */
 
 .auth-layout {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   padding: var(--space-lg); position: relative; overflow: hidden; background: #060612;
 }
 
-/* ——— Animated Background ——— */
+/*Animated Background  */
 .auth-bg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
 
 .auth-gradient-mesh {
@@ -27,7 +24,7 @@
   opacity: 0.5;
 }
 
-/* Floating shapes — enhanced with smoother, diverse animations */
+/* Floating shapes*/
 .auth-shape { position: absolute; border-radius: 50%; opacity: 0.15; }
 .auth-shape-1 {
   width: 300px; height: 300px; border: 2px solid var(--primary);
@@ -57,7 +54,7 @@
   transform: rotate(45deg);
 }
 
-/* Particle dots */
+/* Particle dots*/
 .auth-particles {
   position: absolute;
   inset: 0;
@@ -79,7 +76,7 @@
 .auth-particle:nth-child(7) { left: 60%; top: 40%; }
 .auth-particle:nth-child(8) { left: 15%; top: 50%; }
 
-/* ——— Auth Container ——— */
+/*Auth Container*/
 .auth-container { width: 100%; max-width: 420px; position: relative; z-index: 1; }
 
 .auth-brand { text-align: center; margin-bottom: var(--space-xl); }
@@ -97,7 +94,7 @@
 }
 .auth-brand-subtitle { font-size: var(--font-size-sm); color: var(--text-muted); }
 
-/* ——— Auth Card ——— */
+/*Auth Card*/
 .auth-card {
   background: rgba(22, 22, 42, 0.7); backdrop-filter: blur(24px) saturate(1.5);
   -webkit-backdrop-filter: blur(24px) saturate(1.5);
@@ -129,7 +126,7 @@
   display: flex; align-items: center; justify-content: center; gap: var(--space-sm);
 }
 
-/* Password wrapper */
+/* Password wrapper*/
 .password-wrapper { position: relative; }
 .password-wrapper input { padding-right: 44px; }
 .password-toggle {
@@ -141,7 +138,7 @@
 .password-toggle:hover { color: var(--primary); }
 .password-toggle svg { width: 18px; height: 18px; }
 
-/* Password strength bar */
+/* Password strength bar*/
 .password-strength { display: flex; gap: 4px; margin-top: 4px; }
 .password-strength-bar { height: 3px; flex: 1; border-radius: 2px; background: var(--border); transition: background var(--transition-fast); }
 .password-strength-bar.filled { background: var(--danger); }

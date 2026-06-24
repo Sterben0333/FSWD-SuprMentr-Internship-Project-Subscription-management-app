@@ -1,13 +1,10 @@
-/* ======================================
-   SETTINGS PAGE
-   ====================================== */
 
 .settings-page { padding: var(--space-lg); max-width: 900px; }
 .settings-header { margin-bottom: var(--space-xl); }
 .settings-header h1 { letter-spacing: var(--letter-spacing-tight); }
 .settings-grid { display: flex; flex-direction: column; gap: var(--space-lg); }
 
-/* Section Card */
+/* Section Card*/
 .settings-section {
   padding: var(--space-xl); transition: transform var(--transition-base) var(--ease-out-expo), box-shadow var(--transition-base) var(--ease-out-expo);
 }
@@ -25,11 +22,11 @@
 .settings-section-header h3 { font-size: var(--font-size-md); margin-bottom: 2px; }
 .settings-section-header p { font-size: var(--font-size-sm); }
 
-/* Form */
+/* Form*/
 .settings-form { display: flex; flex-direction: column; gap: var(--space-md); }
 .settings-form-actions { display: flex; justify-content: flex-end; padding-top: var(--space-sm); }
 
-/* Options (toggle rows) */
+/* Options (toggle rows)*/
 .settings-option { display: flex; align-items: center; justify-content: space-between; gap: var(--space-lg); padding: var(--space-md) 0; }
 .settings-option-info { display: flex; flex-direction: column; gap: 2px; }
 
@@ -65,10 +62,10 @@
 .settings-danger .settings-section-icon { background: var(--danger-light); }
 .delete-confirm { display: flex; flex-direction: column; align-items: flex-end; gap: var(--space-sm); }
 
-/* Disabled Input */
+/* Disabled Input*/
 .input-disabled { opacity: 0.6; cursor: not-allowed; }
 
-/* Responsive */
+/* Responsive*/
 @media (max-width: 640px) {
   .settings-page { padding: var(--space-md); }
   .settings-section { padding: var(--space-lg); }

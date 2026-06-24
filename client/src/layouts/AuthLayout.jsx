@@ -4,7 +4,7 @@ import './AuthLayout.css';
 const AuthLayout = () => {
   return (
     <div className="auth-layout">
-      {/* Animated gradient mesh background */}
+      {/* for the Animated gradient mesh background */}
       <div className="auth-bg">
         <div className="auth-gradient-mesh"></div>
         <div className="auth-grid-overlay"></div>
@@ -13,7 +13,7 @@ const AuthLayout = () => {
         <div className="auth-shape auth-shape-3"></div>
         <div className="auth-shape auth-shape-4"></div>
         <div className="auth-shape auth-shape-5"></div>
-        {/* Floating particles */}
+        {/* the Floating particles */}
         <div className="auth-particles">
           <div className="auth-particle"></div>
           <div className="auth-particle"></div>

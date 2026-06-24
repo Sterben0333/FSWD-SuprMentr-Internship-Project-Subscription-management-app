@@ -51,8 +51,9 @@ const LoginPage = () => {
 
     try {
       const { data } = await authAPI.login(formData);
-      setAuth(data.data.user, data.data.token);
-      navigate('/dashboard');
+      const loggedUser = data.data.user;
+      setAuth(loggedUser, data.data.token);
+      navigate(loggedUser.role === 'admin' ? '/admin' : '/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed. Please try again.');
     } finally {

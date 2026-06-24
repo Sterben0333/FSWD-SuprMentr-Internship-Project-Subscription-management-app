@@ -3,10 +3,10 @@ const connectDB = require('./config/db');
 const env = require('./config/env');
 
 const startServer = async () => {
-  // Connect to MongoDB Atlas
+  // for to Connect to MongoDB Atlas
   await connectDB();
 
-  // Start Express server
+  // to Start Express server
   app.listen(env.PORT, () => {
     console.log(`🚀 Server running on http://localhost:${env.PORT}`);
     console.log(`📊 Environment: ${env.NODE_ENV}`);

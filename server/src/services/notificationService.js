@@ -3,9 +3,7 @@ const Subscription = require('../models/Subscription');
 const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 
-/**
- * List notifications for a user
- */
+/*List notifications for a user*/
 const listNotifications = async (userId, { unreadOnly = false } = {}) => {
   const query = { userId };
   if (unreadOnly) query.isRead = false;
@@ -17,16 +15,12 @@ const listNotifications = async (userId, { unreadOnly = false } = {}) => {
     .lean();
 };
 
-/**
- * Get unread count
- */
+/*to Get unread count*/
 const getUnreadCount = async (userId) => {
   return Notification.countDocuments({ userId, isRead: false });
 };
 
-/**
- * Mark notification as read
- */
+/*to Mark notification as read*/
 const markAsRead = async (id, userId) => {
   const notification = await Notification.findOneAndUpdate(
     { _id: id, userId },
@@ -37,16 +31,12 @@ const markAsRead = async (id, userId) => {
   return notification;
 };
 
-/**
- * Mark all as read
- */
+/*toMark all as read*/
 const markAllAsRead = async (userId) => {
   await Notification.updateMany({ userId, isRead: false }, { isRead: true });
 };
 
-/**
- * Create a notification (used by cron jobs)
- */
+/*Create a notification (used by cron jobs)*/
 const createNotification = async (data) => {
   // Prevent duplicate notifications for the same event
   const existing = await Notification.findOne({

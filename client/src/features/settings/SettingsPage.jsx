@@ -37,7 +37,7 @@ const SettingsPage = () => {
     setTimeout(() => setMessages((prev) => ({ ...prev, [section]: null })), 4000);
   };
 
-  // ——— Handlers ———
+  //Handlers
 
   const handleProfileUpdate = async (e) => {
     e.preventDefault();
@@ -130,7 +130,7 @@ const SettingsPage = () => {
       </div>
 
       <div className="settings-grid">
-        {/* ——— Profile Section ——— */}
+        {/*Profile Section*/}
         <section className="glass-card settings-section">
           <div className="settings-section-header">
             <span className="settings-section-icon">👤</span>
@@ -173,7 +173,7 @@ const SettingsPage = () => {
           </form>
         </section>
 
-        {/* ——— Appearance ——— */}
+        {/*Appearance*/}
         <section className="glass-card settings-section">
           <div className="settings-section-header">
             <span className="settings-section-icon">🎨</span>
@@ -204,7 +204,7 @@ const SettingsPage = () => {
           </div>
         </section>
 
-        {/* ——— Preferences ——— */}
+        {/* Preferences*/}
         <section className="glass-card settings-section">
           <div className="settings-section-header">
             <span className="settings-section-icon">💰</span>
@@ -253,7 +253,7 @@ const SettingsPage = () => {
           </div>
         </section>
 
-        {/* ——— Security ——— */}
+        {/*Security*/}
         <section className="glass-card settings-section">
           <div className="settings-section-header">
             <span className="settings-section-icon">🔒</span>
@@ -312,7 +312,7 @@ const SettingsPage = () => {
           </form>
         </section>
 
-        {/* ——— Danger Zone ——— */}
+        {/* Danger Zone*/}
         <section className="glass-card settings-section settings-danger">
           <div className="settings-section-header">
             <span className="settings-section-icon">⚠️</span>

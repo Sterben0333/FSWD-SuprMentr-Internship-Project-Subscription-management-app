@@ -1,8 +1,6 @@
 const Subscription = require('../models/Subscription');
 
-/**
- * Get dashboard summary for a user
- */
+/*Get dashboard summary for a user*/
 const getDashboardSummary = async (userId) => {
   const subscriptions = await Subscription.find({ userId })
     .populate('categoryId', 'name color icon')
@@ -11,16 +9,16 @@ const getDashboardSummary = async (userId) => {
   const now = new Date();
   const activeStatuses = ['active', 'trial'];
 
-  // Active subscriptions
+  // for Active subscriptions
   const active = subscriptions.filter((s) => activeStatuses.includes(s.status));
 
-  // Monthly cost (normalize all cycles to monthly)
+  // for Monthly cost (normalize all cycles to monthly)
   const totalMonthly = active.reduce((sum, s) => sum + normalizeToMonthly(s), 0);
 
-  // Yearly projected
+  // the Yearly projected
   const totalYearly = totalMonthly * 12;
 
-  // Upcoming in next 7 days
+  // subs Upcoming in next 7 days
   const sevenDaysOut = new Date(now);
   sevenDaysOut.setDate(sevenDaysOut.getDate() + 7);
   const upcoming = subscriptions
@@ -61,7 +59,7 @@ const getDashboardSummary = async (userId) => {
     categorySpend[catName].count += 1;
   });
 
-  // Most expensive subscriptions
+  // showing Most expensive subscriptions
   const mostExpensive = [...active]
     .sort((a, b) => normalizeToMonthly(b) - normalizeToMonthly(a))
     .slice(0, 5)

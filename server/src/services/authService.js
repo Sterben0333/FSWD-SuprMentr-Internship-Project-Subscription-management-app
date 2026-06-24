@@ -7,9 +7,7 @@ const env = require('../config/env');
 const SALT_ROUNDS = 10;
 const TOKEN_EXPIRY = '7d';
 
-/**
- * Register a new user
- */
+/* For the Registring a new user */
 const register = async ({ name, email, password }) => {
   // Check if user already exists
   const existing = await User.findOne({ email });
@@ -17,14 +15,15 @@ const register = async ({ name, email, password }) => {
     throw ApiError.conflict('Email already registered');
   }
 
-  // Hash password
+  // the bycrypt Hash password
   const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
 
-  // Create user
+  // Create user (auto-promote admin email)
   const user = await User.create({
     name,
     email,
     passwordHash,
+    role: email === env.ADMIN_EMAIL ? 'admin' : 'user',
   });
 
   // Generate token
@@ -36,23 +35,27 @@ const register = async ({ name, email, password }) => {
   };
 };
 
-/**
- * Login with email and password
- */
+/*for Login with email and password (the login page) */
 const login = async ({ email, password }) => {
-  // Find user
+  // Finding user
   const user = await User.findOne({ email });
   if (!user) {
     throw ApiError.unauthorized('Invalid email or password');
   }
 
-  // Verify password
+  // Verifying password
   const isMatch = await bcrypt.compare(password, user.passwordHash);
   if (!isMatch) {
     throw ApiError.unauthorized('Invalid email or password');
   }
 
-  // Generate token
+  // Auto-promote admin email on first login
+  if (user.email === env.ADMIN_EMAIL && user.role !== 'admin') {
+    user.role = 'admin';
+    await user.save();
+  }
+
+  // Generating token
   const token = generateToken(user);
 
   return {
@@ -61,9 +64,7 @@ const login = async ({ email, password }) => {
   };
 };
 
-/**
- * Get current user profile
- */
+/* for Getting current user profile*/
 const getMe = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -72,9 +73,7 @@ const getMe = async (userId) => {
   return sanitizeUser(user);
 };
 
-/**
- * Update user profile (including optional password change)
- */
+/*Update user profile (including optional password change)*/
 const updateProfile = async (userId, updates) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -102,9 +101,7 @@ const updateProfile = async (userId, updates) => {
   return sanitizeUser(user);
 };
 
-/**
- * Delete user account and all associated data
- */
+/*Delete user account and all associated data*/
 const deleteAccount = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
@@ -123,11 +120,9 @@ const deleteAccount = async (userId) => {
   return { message: 'Account deleted successfully' };
 };
 
-// ——— Helpers ———
-
 function generateToken(user) {
   return jwt.sign(
-    { userId: user._id, email: user.email },
+    { userId: user._id, email: user.email, role: user.role || 'user' },
     env.JWT_SECRET,
     { expiresIn: TOKEN_EXPIRY }
   );

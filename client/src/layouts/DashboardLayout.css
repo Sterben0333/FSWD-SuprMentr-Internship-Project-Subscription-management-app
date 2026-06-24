@@ -1,10 +1,7 @@
-/* ======================================
-   DASHBOARD LAYOUT — Premium SaaS Shell
-   ====================================== */
 
 .dashboard-layout { display: flex; min-height: 100vh; background: var(--bg-primary); }
 
-/* ——— Sidebar ——— */
+/*Sidebar */
 .sidebar {
   width: var(--sidebar-width); background: var(--gradient-sidebar);
   border-right: 1px solid var(--border); display: flex; flex-direction: column;
@@ -45,6 +42,17 @@
 .nav-icon svg { width: 20px; height: 20px; }
 .nav-label { overflow: hidden; text-overflow: ellipsis; }
 
+/* Admin nav item with special accent */
+.admin-nav-item {
+  margin-top: auto;
+  border-top: 1px solid var(--border);
+  padding-top: var(--space-sm);
+  margin-top: var(--space-sm);
+}
+.admin-nav-item:hover { background: rgba(245, 158, 11, 0.1); color: #f59e0b; }
+.admin-nav-item.active { background: rgba(245, 158, 11, 0.12); color: #f59e0b; }
+.admin-nav-item.active::before { background: #f59e0b; }
+
 .sidebar-footer { padding: var(--space-md); border-top: 1px solid var(--border); }
 .sidebar-toggle {
   width: 100%; display: flex; align-items: center; justify-content: center;
@@ -62,21 +70,21 @@
 .support-label { font-size: 10px; color: var(--text-muted); font-weight: var(--font-weight-semibold); text-transform: uppercase; letter-spacing: 0.5px; }
 .support-address { font-size: 11px; color: var(--text-secondary); user-select: all; cursor: text; }
 
-/* Mobile overlay & hamburger */
+/* Mobile overlay*/
 .mobile-overlay {
   display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5);
   backdrop-filter: blur(4px); z-index: 99;
 }
 .mobile-menu-btn { display: none; }
 
-/* ——— Main Wrapper ——— */
+/*Main Wrapper*/
 .main-wrapper {
   flex: 1; margin-left: var(--sidebar-width); display: flex; flex-direction: column;
   min-height: 100vh; transition: margin-left 300ms var(--ease-out-expo);
 }
 .sidebar-collapsed .main-wrapper { margin-left: var(--sidebar-collapsed); }
 
-/* ——— Navbar ——— */
+/*Navbar*/
 .navbar {
   height: var(--navbar-height); display: flex; align-items: center; justify-content: space-between;
   padding: 0 var(--space-xl); background: var(--bg-glass); backdrop-filter: var(--glass-blur);
@@ -109,10 +117,10 @@
 .user-name { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
 .user-email { font-size: var(--font-size-2xs); color: var(--text-muted); }
 
-/* ——— Main Content ——— */
+/*Main Content*/
 .main-content { flex: 1; padding: var(--space-xl); max-width: var(--max-content-width); width: 100%; margin: 0 auto; }
 
-/* ——— Responsive ——— */
+/*Responsive*/
 @media (max-width: 768px) {
   .sidebar { width: var(--sidebar-collapsed); }
   .sidebar .sidebar-title, .sidebar .nav-label { display: none; }
