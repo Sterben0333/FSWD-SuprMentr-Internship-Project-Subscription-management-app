@@ -13,7 +13,7 @@ app.use(helmet());
 app.use(
   cors({
     origin: process.env.NODE_ENV === 'production'
-      ? process.env.CLIENT_URL || true   // fall back to same-origin if CLIENT_URL not set
+      ? process.env.CLIENT_URL || false  // same-origin only if CLIENT_URL not set
       : 'http://localhost:5173',
     credentials: true,
   })
