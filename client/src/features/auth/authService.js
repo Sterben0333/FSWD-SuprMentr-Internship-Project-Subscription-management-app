@@ -10,4 +10,11 @@ export const authAPI = {
 
 export const adminAPI = {
   getStats: () => api.get('/admin/stats'),
+  getMaintenanceStatus: () => api.get('/admin/maintenance'),
+  toggleMaintenance: (data) => api.put('/admin/maintenance', data),
 };
+
+export const maintenanceAPI = {
+  getStatus: () => api.get('/maintenance/status'),
+};
+

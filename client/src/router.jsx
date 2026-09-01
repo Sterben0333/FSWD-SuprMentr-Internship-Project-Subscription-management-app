@@ -10,8 +10,14 @@ import AnalyticsPage from './features/analytics/AnalyticsPage';
 import SettingsPage from './features/settings/SettingsPage';
 import AdminDashboard from './features/admin/AdminDashboard';
 import AdminRoute from './components/AdminRoute';
+import MaintenancePage from './features/maintenance/MaintenancePage';
 
 const router = createBrowserRouter([
+  {
+    // Maintenance page (public)
+    path: '/maintenance',
+    element: <MaintenancePage />,
+  },
   {
     // Public routes (authentication)
     element: <AuthLayout />,
@@ -43,3 +49,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+

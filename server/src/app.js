@@ -28,15 +28,22 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// API Routes
+// Public routes (no auth, no maintenance block)
+app.use('/api/maintenance', require('./routes/maintenanceRoutes'));
+
+// Auth routes — accessible during maintenance so admins can log in
 app.use('/api/auth', require('./routes/authRoutes'));
+
+// Admin routes — admins bypass maintenance middleware internally
+app.use('/api/admin', require('./routes/adminRoutes'));
+
+// Protected API routes — maintenance middleware applied inside each route file
 app.use('/api/subscriptions', require('./routes/subscriptionRoutes'));
 app.use('/api/categories', require('./routes/categoryRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 app.use('/api/notifications', require('./routes/notificationRoutes'));
 app.use('/api/cron', require('./routes/cronRoutes'));
-app.use('/api/admin', require('./routes/adminRoutes'));
 
 // the 404 handler for unknown API routes
 app.all('/api/*', (req, res) => {

@@ -19,10 +19,10 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle 401 (expired/invalid token)
+// Response interceptor to handle 401 (expired/invalid token) and 503 (maintenance mode)
 api.interceptors.response.use(
   (response) => response,
-  (error) => {
+  async (error) => {
     if (error.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
@@ -31,6 +31,18 @@ api.interceptors.response.use(
         window.location.href = '/login';
       }
     }
+
+    // Maintenance mode — redirect non-admin users
+    if (error.response?.status === 503 && error.response?.data?.maintenanceMode) {
+      // Dynamically import to avoid circular dependencies
+      const store = (await import('../store/maintenanceStore')).default;
+      store.getState().setMaintenanceMode(true, error.response.data.message);
+
+      if (window.location.pathname !== '/maintenance') {
+        window.location.href = '/maintenance';
+      }
+    }
+
     return Promise.reject(error);
   }
 );

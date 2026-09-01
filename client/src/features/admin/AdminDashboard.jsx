@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { adminAPI } from '../auth/authService';
 import './AdminDashboard.css';
 
@@ -6,6 +6,23 @@ const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+
+  // Maintenance mode state
+  const [maintenanceEnabled, setMaintenanceEnabled] = useState(false);
+  const [maintenanceMessage, setMaintenanceMessage] = useState('');
+  const [maintenanceInfo, setMaintenanceInfo] = useState(null);
+  const [maintenanceLoading, setMaintenanceLoading] = useState(false);
+
+  const loadMaintenanceStatus = useCallback(async () => {
+    try {
+      const { data } = await adminAPI.getMaintenanceStatus();
+      setMaintenanceEnabled(data.data.isEnabled);
+      setMaintenanceMessage(data.data.message || '');
+      setMaintenanceInfo(data.data);
+    } catch {
+      // Silent fail — not critical
+    }
+  }, []);
 
   useEffect(() => {
     const loadStats = async () => {
@@ -19,7 +36,31 @@ const AdminDashboard = () => {
       }
     };
     loadStats();
-  }, []);
+    loadMaintenanceStatus();
+  }, [loadMaintenanceStatus]);
+
+  const handleMaintenanceToggle = async () => {
+    const newState = !maintenanceEnabled;
+    const confirmMsg = newState
+      ? 'Are you sure you want to ENABLE maintenance mode? All non-admin users will be blocked from accessing the application.'
+      : 'Are you sure you want to DISABLE maintenance mode? Users will be able to access the application again.';
+
+    if (!window.confirm(confirmMsg)) return;
+
+    setMaintenanceLoading(true);
+    try {
+      const { data } = await adminAPI.toggleMaintenance({
+        isEnabled: newState,
+        message: maintenanceMessage,
+      });
+      setMaintenanceEnabled(data.data.isEnabled);
+      setMaintenanceInfo(data.data);
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to toggle maintenance mode');
+    } finally {
+      setMaintenanceLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -126,6 +167,64 @@ const AdminDashboard = () => {
         <p className="text-secondary">Platform overview and user activity</p>
       </div>
 
+      {/* Maintenance Mode Card */}
+      <div className={`admin-maintenance-card glass-card ${maintenanceEnabled ? 'maintenance-active' : ''}`} id="maintenance-mode-card">
+        <div className="admin-maintenance-header">
+          <div className="admin-maintenance-left">
+            <div className="admin-maintenance-icon">
+              🔧
+            </div>
+            <div className="admin-maintenance-info">
+              <h3>Maintenance Mode</h3>
+              <p>Block user access for scheduled maintenance</p>
+            </div>
+          </div>
+
+          <div className="admin-maintenance-right">
+            <span className={`maintenance-status-badge ${maintenanceEnabled ? 'maintenance-status-badge--active' : 'maintenance-status-badge--inactive'}`}>
+              {maintenanceEnabled ? 'Active' : 'Inactive'}
+            </span>
+
+            <label className="toggle-switch" title={maintenanceEnabled ? 'Disable maintenance mode' : 'Enable maintenance mode'}>
+              <input
+                type="checkbox"
+                checked={maintenanceEnabled}
+                onChange={handleMaintenanceToggle}
+                disabled={maintenanceLoading}
+                id="maintenance-toggle"
+              />
+              <span className="toggle-slider" />
+            </label>
+          </div>
+        </div>
+
+        <div className="admin-maintenance-message">
+          <label htmlFor="maintenance-message-input">Custom message (optional)</label>
+          <textarea
+            id="maintenance-message-input"
+            value={maintenanceMessage}
+            onChange={(e) => setMaintenanceMessage(e.target.value)}
+            placeholder="We're currently performing some maintenance to improve your experience. We'll be back shortly!"
+            maxLength={500}
+          />
+          {maintenanceEnabled && maintenanceInfo?.enabledAt && (
+            <div className="maintenance-enabled-info">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ width: 12, height: 12, flexShrink: 0 }}>
+                <circle cx="12" cy="12" r="10" />
+                <polyline points="12 6 12 12 16 14" />
+              </svg>
+              <span>
+                Enabled {new Date(maintenanceInfo.enabledAt).toLocaleString('en-IN', {
+                  day: 'numeric', month: 'short', year: 'numeric',
+                  hour: '2-digit', minute: '2-digit',
+                })}
+                {maintenanceInfo.enabledBy ? ` by ${maintenanceInfo.enabledBy}` : ''}
+              </span>
+            </div>
+          )}
+        </div>
+      </div>
+
       {/* Stat Cards */}
       <div className="admin-stats-grid stagger-children">
         {statCards.map((s, i) => (
@@ -206,3 +305,4 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+
