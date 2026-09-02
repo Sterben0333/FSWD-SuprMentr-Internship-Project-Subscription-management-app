@@ -202,6 +202,25 @@
   animation: dotBlink 1.5s ease-in-out infinite;
 }
 
+/* Admin/Staff login link — intentionally subtle */
+.maintenance-admin-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-top: var(--space-md);
+  font-size: var(--font-size-2xs);
+  color: var(--text-muted);
+  opacity: 0.45;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+  letter-spacing: 0.3px;
+}
+
+.maintenance-admin-link:hover {
+  opacity: 1;
+  color: var(--primary);
+}
+
 /* ─── Responsive ─── */
 @media (max-width: 640px) {
   .maintenance-card {

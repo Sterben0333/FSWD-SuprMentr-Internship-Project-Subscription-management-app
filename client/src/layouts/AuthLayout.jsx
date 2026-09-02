@@ -1,7 +1,34 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, Navigate, useSearchParams } from 'react-router-dom';
+import useMaintenanceStore from '../store/maintenanceStore';
 import './AuthLayout.css';
 
 const AuthLayout = () => {
+  const { isMaintenanceMode, checkMaintenanceStatus } = useMaintenanceStore();
+  const [checked, setChecked] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  // Allow staff bypass via ?staff=1 (linked from maintenance page)
+  const isStaffBypass = searchParams.get('staff') === '1';
+
+  useEffect(() => {
+    checkMaintenanceStatus().then(() => setChecked(true));
+  }, [checkMaintenanceStatus]);
+
+  // Wait for the maintenance check
+  if (!checked) {
+    return (
+      <div className="loading-screen">
+        <div className="spinner" />
+      </div>
+    );
+  }
+
+  // Redirect to maintenance page if maintenance mode is ON (unless staff bypass)
+  if (isMaintenanceMode && !isStaffBypass) {
+    return <Navigate to="/maintenance" replace />;
+  }
+
   return (
     <div className="auth-layout">
       {/* for the Animated gradient mesh background */}

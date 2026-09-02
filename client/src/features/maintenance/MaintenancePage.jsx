@@ -148,6 +148,21 @@ const MaintenancePage = () => {
           <span className="maintenance-status-dot" />
           <span>Scheduled maintenance in progress</span>
         </div>
+
+        <a href="/login?staff=1" className="maintenance-admin-link" id="maintenance-admin-link">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            style={{ width: 12, height: 12 }}
+          >
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+          </svg>
+          Staff Login
+        </a>
       </div>
     </div>
   );
